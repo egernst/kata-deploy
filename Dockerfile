@@ -16,5 +16,6 @@ RUN wget https://github.com/kata-containers/runtime/releases/download/0.2.0/kata
 RUN wget https://github.com/kata-containers/runtime/releases/download/0.2.0/kata-proxy
 RUN wget https://github.com/kata-containers/runtime/releases/download/0.2.0/kata-shim
 
-ADD install-kata.sh /install-kata.sh
+ADD install-kata-crio.sh /install-kata-crio.sh
+ADD install-kata-containerd.sh /install-kata-containerd.sh
 ADD configuration.toml /opt/kata/

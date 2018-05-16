@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: DaemonSet
 metadata:
-  name: kube-kata
+  name: kube-kata-crio
   namespace: kube-system
 spec:
   template:
@@ -9,7 +9,7 @@ spec:
       containers:
       - name: kube-kata
         image: egernst/mykatadockerfile
-	command: [ "install-kata.sh" ]
+	command: [ "install-kata-crio.sh" ]
         securityContext:
           privileged: false
         volumeMounts:
