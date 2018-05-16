@@ -1,0 +1,168 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: kata-label-node
+  namespace: kube-system
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: node-labeler
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "patch"]
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: kata-label-node-rb
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: node-labeler
+subjects:
+- kind: ServiceAccount
+  name: kata-label-node
+  namespace: kube-system
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kubelet-runtime-labeler
+  namespace: kube-system
+spec:
+  selector:
+      matchLabels:
+        name: kubelet-runtime-labeler
+  template:
+    metadata:
+        labels:
+          name: kubelet-runtime-labeler
+    spec:
+      serviceAccountName: kata-label-node
+      containers:
+      - name: kubelet-runtime-labeler-pod
+        image: egernst/kata-deploy
+        command: [ "sh", "-c" ]
+        args:
+        - printenv NODE_NAME;
+          kubectl get node $NODE_NAME --show-labels;
+          kubectl label nodes $NODE_NAME container-runtime=$(kubectl describe node $NODE_NAME | awk -F'[:]' '/Container Runtime Version/ {print $2}' |  tr -d ' ');
+          kubectl get node $NODE_NAME --show-labels;
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          privileged: false
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kubelet-cri-o-kata
+  namespace: kube-system
+spec:
+  selector:
+      matchLabels:
+        name: kubelet-cri-o-kata
+  template:
+    metadata:
+        labels:
+          name: kubelet-cri-o-kata
+    spec:
+      serviceAccountName: kata-label-node
+      nodeSelector:
+          container-runtime: cri-o
+      containers:
+      - name: kube-kata
+        image: egernst/kata-deploy
+        command: [ "sh", "-c" ]
+        args: [ "/install-kata-crio.sh && kubectl label nodes $NODE_NAME kata-runtime=true;kubectl get node $NODE_NAME --show-labels;" ]
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - name: crio-conf
+          mountPath: /etc/crio/crio.conf
+        - name: kata-artifacts
+          mountPath: /opt/kata/
+        - name: dbus
+          mountPath: /var/run/dbus
+        - name: systemd
+          mountPath: /run/systemd
+      volumes:
+        - name: crio-conf
+          hostPath: /etc/crio/crio.conf
+        - name: kata-artifacts
+          hostPath: /opt/kata/
+        - name: dbus
+          hostPath: /var/run/dbus
+        - name: systemd
+          hostPath: /run/systemd
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
+---
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kubelet-cri-containerd-kata
+  namespace: kube-system
+spec:
+  selector:
+      matchLabels:
+        name: kubelet-cri-containerd-kata
+  template:
+    metadata:
+        labels:
+          name: kubelet-cri-containerd-kata
+    spec:
+      serviceAccountName: kata-label-node
+      nodeSelector:
+          container-runtime: cri-containerd
+      containers:
+      - name: kube-kata
+        image: egernst/kata-deploy
+        command: [ "sh", "-c" ]
+        args: [ "/install-kata-containerd.sh && kubectl label nodes $NODE_NAME kata-runtime=true;kubectl get node $NODE_NAME --show-labels;" ]
+        env:
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - name: crio-conf
+          mountPath: /etc/crio/crio.conf
+        - name: kata-artifacts
+          mountPath: /opt/kata/
+        - name: dbus
+          mountPath: /var/run/dbus
+        - name: systemd
+          mountPath: /run/systemd
+      volumes:
+        - name: crio-conf
+          hostPath: /etc/crio/crio.conf
+        - name: kata-artifacts
+          hostPath: /opt/kata/
+        - name: dbus
+          hostPath: /var/run/dbus
+        - name: systemd
+          hostPath: /run/systemd
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
