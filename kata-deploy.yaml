@@ -49,8 +49,10 @@ spec:
         args:
         - printenv NODE_NAME;
           kubectl get node $NODE_NAME --show-labels;
-          kubectl label nodes $NODE_NAME container-runtime=$(kubectl describe node $NODE_NAME | awk -F'[:]' '/Container Runtime Version/ {print $2}' |  tr -d ' ');
+          kubectl label node $NODE_NAME container-runtime=$(kubectl describe node $NODE_NAME | awk -F'[:]' '/Container Runtime Version/ {print $2}' |  tr -d ' ');
           kubectl get node $NODE_NAME --show-labels;
+          while true;
+          do sleep 36000; done;
         env:
         - name: NODE_NAME
           valueFrom:
@@ -84,7 +86,11 @@ spec:
       - name: kube-kata
         image: egernst/kata-deploy
         command: [ "sh", "-c" ]
-        args: [ "/install-kata-crio.sh && kubectl label nodes $NODE_NAME kata-runtime=true;kubectl get node $NODE_NAME --show-labels;" ]
+        args:
+        - /install-kata-crio.sh && kubectl label node $NODE_NAME kata-runtime=true;
+          kubectl get node $NODE_NAME --show-labels;
+          while true;
+          do sleep 36000; done;
         env:
         - name: NODE_NAME
           valueFrom:
@@ -103,13 +109,18 @@ spec:
           mountPath: /run/systemd
       volumes:
         - name: crio-conf
-          hostPath: /etc/crio/crio.conf
+          hostPath:
+            path: /etc/crio/crio.conf
         - name: kata-artifacts
-          hostPath: /opt/kata/
+          hostPath:
+            path: /opt/kata/
+            type: DirectoryOrCreate
         - name: dbus
-          hostPath: /var/run/dbus
+          hostPath:
+            path: /var/run/dbus
         - name: systemd
-          hostPath: /run/systemd
+          hostPath:
+            path: /run/systemd
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
@@ -131,12 +142,16 @@ spec:
     spec:
       serviceAccountName: kata-label-node
       nodeSelector:
-          container-runtime: cri-containerd
+          container-runtime: containerd
       containers:
       - name: kube-kata
         image: egernst/kata-deploy
         command: [ "sh", "-c" ]
-        args: [ "/install-kata-containerd.sh && kubectl label nodes $NODE_NAME kata-runtime=true;kubectl get node $NODE_NAME --show-labels;" ]
+        args:
+        - /install-kata-containerd.sh && kubectl label node $NODE_NAME kata-runtime=true;
+          kubectl get node $NODE_NAME --show-labels;
+          while true;
+          do sleep 36000; done;
         env:
         - name: NODE_NAME
           valueFrom:
@@ -155,13 +170,18 @@ spec:
           mountPath: /run/systemd
       volumes:
         - name: crio-conf
-          hostPath: /etc/crio/crio.conf
+          hostPath:
+            path: /etc/crio/crio.conf
         - name: kata-artifacts
-          hostPath: /opt/kata/
+          hostPath:
+            path: /opt/kata/
+            type: DirectoryOrCreate
         - name: dbus
-          hostPath: /var/run/dbus
+          hostPath:
+            path: /var/run/dbus
         - name: systemd
-          hostPath: /run/systemd
+          hostPath:
+            path: /run/systemd
   updateStrategy:
     rollingUpdate:
       maxUnavailable: 1
