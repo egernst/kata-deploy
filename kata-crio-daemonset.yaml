@@ -1,0 +1,29 @@
+apiVersion: extensions/v1beta1
+kind: DaemonSet
+metadata:
+  name: kube-kata
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: kube-kata
+        image: egernst/mykatadockerfile
+	command: [ "install-kata.sh" ]
+        securityContext:
+          privileged: false
+        volumeMounts:
+        - name: crio-conf
+          mountPath: /etc/crio/crio.conf
+        - name: kata-artifacts
+          mountPath: /opt/kata/
+        - name: dbus
+          mountPath: /var/run/dbus
+        - name: systemd
+          mountPath: /run/systemd
+        - name: systemctld
+          mountPath: /usr/bin/systemctl
+  updateStrategy:
+    rollingUpdate:
+      maxUnavailable: 1
+    type: RollingUpdate
