@@ -1,9 +1,4 @@
 #!/bin/bash
-
-#First - check to see if we are using CRI-O or containerd
-
-
-
 ## Configure CRIO to use Kata:
 echo "Set manage_network_ns_lifecycle to true"
 network_ns_flag="manage_network_ns_lifecycle"
@@ -34,7 +29,3 @@ echo "Reload systemd services"
 sudo systemctl daemon-reload
 
 ### Restart CRIO:
-
-
-
-## Configure CRI-Containerd to use Kata:
