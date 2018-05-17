@@ -4,7 +4,9 @@
 echo "copying kata artifacts from /tmp to /opt"
 cp -R /tmp/kata/* /opt/kata/
 
-mv /opt/kata/configuration.toml /usr/share/defaults/kata-containers/configuration.toml
+chmod +x /opt/kata/bin/*
+
+cp /opt/kata/configuration.toml /usr/share/defaults/kata-containers/configuration.toml
 
 ## Configure CRIO to use Kata:
 echo "Set manage_network_ns_lifecycle to true"

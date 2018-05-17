@@ -14,7 +14,7 @@ RUN wget -O /bin/kubectl https://storage.googleapis.com/kubernetes-release/relea
     chmod +x /bin/kubectl
 
 COPY bin /tmp/kata/bin
-COPY qemu-artifacts /tmp/kata/qemu
+COPY qemu-artifacts /tmp/kata/share/qemu
 
 COPY configuration.toml /tmp/kata/
 COPY install-kata-crio.sh install-kata-containerd.sh /

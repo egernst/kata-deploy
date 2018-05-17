@@ -104,7 +104,7 @@ spec:
         - name: crio-conf
           mountPath: /etc/crio/crio.conf
         - name: kata-conf
-          mountPath: /usr/share/defaults/kata-containers/configuration.toml
+          mountPath: /usr/share/defaults/kata-containers/
         - name: kata-artifacts
           mountPath: /opt/kata/
         - name: dbus
@@ -117,7 +117,8 @@ spec:
             path: /etc/crio/crio.conf
         - name: kata-conf
           hostPath:
-            path: /usr/share/defaults/kata-containers/configuration.toml
+            path: /usr/share/defaults/kata-containers/
+            type: DirectoryOrCreate
         - name: kata-artifacts
           hostPath:
             path: /opt/kata/

@@ -6,10 +6,10 @@
 # XXX:   Type: kata
 
 [hypervisor.qemu]
-path = "/opt/kata/bin/qemu-lite-system-x86_64"
-kernel = "/opt/kata/vm-artifacts/vmlinuz.container"
+path = "/opt/kata/bin/qemu-system-x86_64"
+kernel = "/opt/kata/vmlinuz.container"
 # initrd = "/opt/kata/vm-artifacts/kata-containers-initrd.img"
-image = "/opt/kata/vm-artifacts/kata-containers.img"
+image = "/opt/kata/kata-containers.img"
 machine_type = "pc"
 
 # Optional space-separated list of options to pass to the guest kernel.
