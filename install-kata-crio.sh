@@ -8,6 +8,10 @@ chmod +x /opt/kata/bin/*
 
 cp /opt/kata/configuration.toml /usr/share/defaults/kata-containers/configuration.toml
 
+crio_config_file="/usr/share/defaults/kata-containers/configuration.toml"
+
+cp $crio_config_file $crio_config_file.bak
+
 ## Configure CRIO to use Kata:
 echo "Set manage_network_ns_lifecycle to true"
 network_ns_flag="manage_network_ns_lifecycle"
@@ -15,6 +19,7 @@ network_ns_flag="manage_network_ns_lifecycle"
 # Check if flag is already defined in the CRI-O config file.
 # If it is already defined, then just change the value to true,
 # else, add the flag with the value.
+
 if grep "$network_ns_flag" "$crio_config_file"; then
 	 sed -i "s/^$network_ns_flag.*/$network_ns_flag = true/" "$crio_config_file"
 else

@@ -171,6 +171,8 @@ spec:
         volumeMounts:
         - name: containerd-conf
           mountPath: /etc/containerd/
+        - name: kata-conf
+          mountPath: /usr/share/defaults/kata-containers/
         - name: kata-artifacts
           mountPath: /opt/kata/
         - name: dbus
@@ -181,6 +183,10 @@ spec:
         - name: containerd-conf
           hostPath:
             path: /etc/containerd/
+            type: DirectoryOrCreate
+        - name: kata-conf
+          hostPath:
+            path: /usr/share/defaults/kata-containers/
             type: DirectoryOrCreate
         - name: kata-artifacts
           hostPath:
