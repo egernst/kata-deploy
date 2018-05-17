@@ -3,6 +3,7 @@
 ## move Kata artifacts to /opt
 echo "copying kata artifacts from /tmp to /opt"
 cp -R /tmp/kata/* /opt/kata/
+mv /opt/kata/configuration.toml /usr/share/defaults/kata-containers/configuration.toml
 
 ## Configure containerd to use Kata:
 echo "create containerd configuration for Kata"
