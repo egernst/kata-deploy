@@ -45,6 +45,7 @@ spec:
       containers:
       - name: kubelet-runtime-labeler-pod
         image: egernst/kata-deploy
+        imagePullPolicy: Always
         command: [ "sh", "-c" ]
         args:
         - printenv NODE_NAME;
@@ -85,6 +86,7 @@ spec:
       containers:
       - name: kube-kata
         image: egernst/kata-deploy
+        imagePullPolicy: Always
         command: [ "sh", "-c" ]
         args:
         - /install-kata-crio.sh && kubectl label node $NODE_NAME kata-runtime=true;
@@ -146,6 +148,7 @@ spec:
       containers:
       - name: kube-kata
         image: egernst/kata-deploy
+        imagePullPolicy: Always
         command: [ "sh", "-c" ]
         args:
         - /install-kata-containerd.sh && kubectl label node $NODE_NAME kata-runtime=true;
