@@ -6,9 +6,9 @@ cp -R /tmp/kata/* /opt/kata/
 
 ## Configure containerd to use Kata:
 echo "create containerd configuration for Kata"
-sudo mkdir -p /etc/containerd/
+mkdir -p /etc/containerd/
 
-cat << EOT | sudo tee /etc/containerd/config.toml
+cat << EOT | tee /etc/containerd/config.toml
 [plugins]
     [plugins.cri.containerd]
       snapshotter = "overlayfs"
@@ -24,5 +24,5 @@ EOT
 
 
 echo "Reload systemd services"
-sudo systemctl daemon-reload
-sudo systemctl restart containerd
+systemctl daemon-reload
+systemctl restart containerd

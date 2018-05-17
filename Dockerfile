@@ -1,7 +1,8 @@
-FROM busybox
+FROM centos/systemd
 ARG KATA_VER=0.2.0
 ARG KATA_URL=https://github.com/kata-containers/runtime/releases/download/${KATA_VER}
 
+RUN yum install -y wget
 WORKDIR /tmp/kata/
 RUN wget ${KATA_URL}/vmlinuz.container ${KATA_URL}/kata-containers.img
 
