@@ -53,7 +53,7 @@ spec:
           kubectl label node $NODE_NAME container-runtime=$(kubectl describe node $NODE_NAME | awk -F'[:]' '/Container Runtime Version/ {print $2}' |  tr -d ' ');
           kubectl get node $NODE_NAME --show-labels;
           while true;
-          do sleep 36000; done;
+          do sleep 30; done;
         env:
         - name: NODE_NAME
           valueFrom:
@@ -154,7 +154,7 @@ spec:
         - /install-kata-containerd.sh && kubectl label node $NODE_NAME kata-runtime=true;
           kubectl get node $NODE_NAME --show-labels;
           while true;
-          do sleep 36000; done;
+          do sleep 30; done;
         env:
         - name: NODE_NAME
           valueFrom:
