@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 
 ## move Kata artifacts to /opt
-cp -R /tmp/kata /opt/kata
+echo "copying kata artifacts from /tmp to /opt"
+cp -R /tmp/kata/* /opt/kata/
 
 ## Configure containerd to use Kata:
+echo "create containerd configuration for Kata"
 sudo mkdir -p /etc/containerd/
 
 cat << EOT | sudo tee /etc/containerd/config.toml

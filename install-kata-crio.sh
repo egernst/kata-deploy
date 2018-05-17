@@ -1,8 +1,8 @@
-#!/bin/bash
-
+#!/bin/sh
 
 ## move Kata artifacts to /opt
-cp -R /tmp/kata /opt/kata
+echo "copying kata artifacts from /tmp to /opt"
+cp -R /tmp/kata/* /opt/kata/
 
 ## Configure CRIO to use Kata:
 echo "Set manage_network_ns_lifecycle to true"

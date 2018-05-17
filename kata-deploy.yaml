@@ -160,8 +160,8 @@ spec:
         securityContext:
           privileged: false
         volumeMounts:
-        - name: crio-conf
-          mountPath: /etc/crio/crio.conf
+        - name: containerd-conf
+          mountPath: /etc/containerd/
         - name: kata-artifacts
           mountPath: /opt/kata/
         - name: dbus
@@ -169,9 +169,10 @@ spec:
         - name: systemd
           mountPath: /run/systemd
       volumes:
-        - name: crio-conf
+        - name: containerd-conf
           hostPath:
-            path: /etc/crio/crio.conf
+            path: /etc/containerd/
+            type: DirectoryOrCreate
         - name: kata-artifacts
           hostPath:
             path: /opt/kata/
