@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## move Kata artifacts to /opt
-mv /tmp/kata /opt/kata
+cp -R /tmp/kata /opt/kata
 
 ## Configure containerd to use Kata:
 sudo mkdir -p /etc/containerd/
