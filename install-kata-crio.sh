@@ -8,7 +8,7 @@ chmod +x /opt/kata/bin/*
 
 cp /opt/kata/configuration.toml /usr/share/defaults/kata-containers/configuration.toml
 
-crio_config_file="/usr/share/defaults/kata-containers/configuration.toml"
+crio_config_file="/etc/crio/crio.conf"
 
 cp $crio_config_file $crio_config_file.bak
 
