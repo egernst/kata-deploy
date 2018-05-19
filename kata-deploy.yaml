@@ -46,6 +46,10 @@ spec:
       - name: kubelet-runtime-labeler-pod
         image: egernst/kata-deploy
         imagePullPolicy: Always
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "sh", "-c", "kubectl label node $NODE_NAME container-runtime-"
         command: [ "sh", "-c" ]
         args:
         - printenv NODE_NAME;
@@ -87,6 +91,12 @@ spec:
       - name: kube-kata
         image: egernst/kata-deploy
         imagePullPolicy: Always
+        lifecycle:
+          preStop:
+            exec:
+              command: [ "sh", "-c" ]
+              args:
+              - /remove-kata-crio.sh && kubectl label node $NODE_NAME kata-runtime-
         command: [ "sh", "-c" ]
         args:
         - /install-kata-crio.sh && kubectl label node $NODE_NAME kata-runtime=true;
@@ -155,6 +165,12 @@ spec:
       - name: kube-kata
         image: egernst/kata-deploy
         imagePullPolicy: Always
+        lifecycle:
+                preStop:
+                        exec:
+                                command: [ "sh", "-c" ]
+                                args:
+                                - /remove-kata-containerd.sh && kubectl label node $NODE_NAME kata-runtime-
         command: [ "sh", "-c" ]
         args:
         - /install-kata-containerd.sh && kubectl label node $NODE_NAME kata-runtime=true;
