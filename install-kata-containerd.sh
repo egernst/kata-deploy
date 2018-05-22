@@ -17,7 +17,7 @@ cat << EOT | tee /etc/containerd/config.toml
       snapshotter = "overlayfs"
       [plugins.cri.containerd.default_runtime]
         runtime_type = "io.containerd.runtime.v1.linux"
-        runtime_engine = "/usr/bin/runc"
+        runtime_engine = ""
         runtime_root = ""
       [plugins.cri.containerd.untrusted_workload_runtime]
         runtime_type = "io.containerd.runtime.v1.linux"
