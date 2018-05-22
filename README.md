@@ -1,6 +1,6 @@
 # kata-deploy
 
-This repo containe a few daemonsets via kata-deploy.yaml, Dockerfile for kata-deploy container image,
+This repo contains a few daemonsets via kata-deploy.yaml, Dockerfile for kata-deploy container image,
 as well as some of the artifacts associated with the docker image.
 
 With this, if a user has an existing Kubernetes cluster, running the following will install and configure Kata:
