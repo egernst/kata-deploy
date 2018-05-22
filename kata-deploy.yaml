@@ -45,7 +45,6 @@ spec:
       containers:
       - name: kubelet-runtime-labeler-pod
         image: egernst/kata-deploy
-        imagePullPolicy: Always
         lifecycle:
           preStop:
             exec:
@@ -90,7 +89,6 @@ spec:
       containers:
       - name: kube-kata
         image: egernst/kata-deploy
-        imagePullPolicy: Always
         lifecycle:
           preStop:
             exec:
@@ -162,7 +160,6 @@ spec:
       containers:
       - name: kube-kata
         image: egernst/kata-deploy
-        imagePullPolicy: Always
         lifecycle:
           preStop:
             exec:
