@@ -1,5 +1,11 @@
 #!/bin/sh
 
+## This script assumes that containerd is already installed
+## To install it you can run the following:
+## export CONTAINERD_VERSION=1.1.0
+## wget https://storage.googleapis.com/cri-containerd-release/cri-containerd-${CONTAINERD_VERSION}.linux-amd64.tar.gz
+## sudo tar -C / -xzf cri-containerd-${CONTAINERD_VERSION}.linux-amd64.tar.gz
+
 ## move Kata artifacts to /opt
 echo "copying kata artifacts from /tmp to /opt"
 cp -R /tmp/kata/* /opt/kata/

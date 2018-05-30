@@ -1,5 +1,8 @@
 #!/bin/sh
 
+## This script assumes that crio is installed on your system
+## For more information refer to the documentation in http://cri-o.io/
+
 ## move Kata artifacts to /opt
 echo "copying kata artifacts from /tmp to /opt"
 cp -R /tmp/kata/* /opt/kata/
