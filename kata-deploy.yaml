@@ -62,7 +62,7 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["sh", "-c", "kubectl label node $NODE_NAME --overwrite kata-runtime=cleanup"]
+              command: ["sh", "-c", "/tmp/kata/scripts/remove-kata-crio.sh && kubectl label node $NODE_NAME --overwrite kata-runtime=cleanup"]
         command: [ "sh", "-c" ]
         args:
         - /tmp/kata/scripts/install-kata-crio.sh && kubectl label node $NODE_NAME kata-runtime=true;
@@ -134,7 +134,7 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["sh", "-c", "kubectl label node $NODE_NAME --overwrite kata-runtime=cleanup"]
+              command: ["sh", "-c", "/tmp/kata/scripts/remove-kata-containerd.sh && kubectl label node $NODE_NAME --overwrite kata-runtime=cleanup"]
         command: [ "sh", "-c" ]
         args:
         - /tmp/kata/scripts/install-kata-containerd.sh && kubectl label node $NODE_NAME kata-runtime=true;
