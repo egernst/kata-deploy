@@ -3,8 +3,11 @@
 This repo contains a few daemonsets via kata-deploy.yaml, Dockerfile for kata-deploy container image,
 as well as some of the artifacts associated with the docker image.
 
+## Installing Kata on a running cluster
 With this, if a user has an existing Kubernetes cluster, running the following will install and configure Kata:
 ```
+
+kubectl apply -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-rbac.yaml
 kubectl apply -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-deploy.yaml
 ```
 
@@ -12,6 +15,7 @@ Running the above will result in each node with CRIO or containerd configured to
 and configured through a daemonset for these matching nodes.  The crio or containerd configuration will be updated
 to use kata-runtime for untrusted workloads.  nodes which have kata-runtime installed successfully will be marked with the label ```kata-runtime=true```.
 
+## Running a sample workload
 Untrusted workloads can node-select based on ```kata-runtime=true```, and will be run via kata-runtime if they are marked with
 the appropriate CRIO or containerd annotation:
 ```
@@ -39,7 +43,19 @@ spec:
     kata-runtime: "true"
 ```    
 
-## Kata Artifacts to Install:
+## Removing Kata Containers
+
+Because removal of Kata results in a reset of the CRI shim (either CRIO or containerd) as well as kubelet, an extra cleanup daemonset, kata-cleanup, is created. Ideally this would be a daemonjob, rather than set, but this isn't supported in K8S, so we simply apply and then delete kata-cleanup.
+
+To remove the kata components and labels from the cluster, run the following:
+```
+kubectl delete -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-deploy.yaml
+kubectl apply -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-cleanup.yaml
+kubectl delete -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-cleanup.yaml
+kubectl delete -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-rbac.yaml
+```
+
+# Kata Artifacts to Install:
 
 A Dockerfile is created which contains all of the necessary artifacts for running Kata Containers on a K8S node.
 
