@@ -1,23 +1,25 @@
 # kata-deploy
 
-This repo contains a few daemonsets via kata-deploy.yaml, Dockerfile for kata-deploy container image,
-as well as some of the artifacts associated with the docker image.
+kata-deploy provides a Dockerfile which contains all of the binaries
+and artifacts required to run Kata Containers, as well as reference daemonsets which can be utilized to install Kata Containers on a running Kubernetes cluster.
 
-## Installing Kata on a running cluster
-With this, if a user has an existing Kubernetes cluster, running the following will install and configure Kata:
+Note, installation via daemonsets will only succesfully install `kata-runtime` on
+a node if it is using either containerd or CRI-O CRI-shims.
+
+## Quick start:
+
+### Installing Kata on a running Kubernetes cluster
+
+```
+kubectl apply -f kata-rbac.yaml
+kubectl apply -f kata-deploy.yaml
 ```
 
-kubectl apply -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-rbac.yaml
-kubectl apply -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-deploy.yaml
-```
+### Running a sample workload:
 
-Running the above will result in each node with CRIO or containerd configured to be labeled (either ```container-runtime=cri-o``` or ```container-runtime=containerd```), and for kata-runtime to be installed
-and configured through a daemonset for these matching nodes.  The crio or containerd configuration will be updated
-to use kata-runtime for untrusted workloads.  nodes which have kata-runtime installed successfully will be marked with the label ```kata-runtime=true```.
-
-## Running a sample workload
-Untrusted workloads can node-select based on ```kata-runtime=true```, and will be run via kata-runtime if they are marked with
-the appropriate CRIO or containerd annotation:
+Untrusted workloads can node-select based on ```kata-runtime=true```, and will be
+run via kata-runtime if they are marked with the appropriate CRIO or containerd
+annotation:
 ```
 CRIO:           io.kubernetes.cri-o.TrustedSandbox: "false"
 containerd:     io.kubernetes.cri.untrusted-workload: "true"
@@ -43,32 +45,71 @@ spec:
     kata-runtime: "true"
 ```    
 
-## Removing Kata Containers
-
-Because removal of Kata results in a reset of the CRI shim (either CRIO or containerd) as well as kubelet, an extra cleanup daemonset, kata-cleanup, is created. Ideally this would be a daemonjob, rather than set, but this isn't supported in K8S, so we simply apply and then delete kata-cleanup.
-
-To remove the kata components and labels from the cluster, run the following:
+To run:
 ```
-kubectl delete -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-deploy.yaml
-kubectl apply -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-cleanup.yaml
-kubectl delete -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-cleanup.yaml
-kubectl delete -f https://raw.githubusercontent.com/egernst/kata-deploy/master/kata-rbac.yaml
+kubectl apply -f https://raw.githubusercontent.com/egernst/k8s-testing-scripts/master/nginx-untrusted.yaml
 ```
 
-# Kata Artifacts to Install:
+The user should see the pod start, can verify that the pod is indeed making use of
+Kata Runtime by comparing the container ID observed by:
+```
+/opt/kata/bin/kata-runtime list
+kubectl describe pod nginx-untrusted
+```
 
-A Dockerfile is created which contains all of the necessary artifacts for running Kata Containers on a K8S node.
+To remove the test pod:
+```
+kubectl delete -f https://raw.githubusercontent.com/egernst/k8s-testing-scripts/master/nginx-untrusted.yaml
+```
 
-### Host Artififacts:
+### Removing Kata from the Kubernetes cluster:
 
-1. kata-runtime: pulled from Kata github releases page
-2. kata-proxy: pulled from Kata github releases page
-3. kata-shim: pulled from Kata github releases page
-4. qemu-system-x86_64: statically built and included in this repo, based on [Kata's QEMU repo](https://github.com/kata-containers/qemu)
-5. qemu/* : supporting binaries required for qemu-system-x86_64
+```
+kubectl delete -f kata-deploy.yaml
+kubectl apply -f kata-cleanup.yaml
+kubectl delete -f kata-cleanup.yaml
+kubectl delete -f kata-rbac.yaml
+```
 
-### Virtual Machine Artifacts:
+## kata-deploy Details
 
-1. kata-containers.img: pulled from Kata github releases page
-2. vmliuz.container: pulled from Kata github releases page
+### Dockerfile
 
+A Dockerfile is created which contains all of the necessary artifacts for running
+Kata Containers.
+
+Host artifacts:
+* kata-runtime: pulled from Kata github releases page
+* kata-proxy: pulled from Kata github releases page
+* kata-shim: pulled from Kata github releases page
+* qemu-system-x86_64: statically built and included in this repo, based on Kata's QEMU repo
+* qemu/* : supporting binaries required for qemu-system-x86_64
+
+Virtual Machine artifacts:
+* kata-containers.img: pulled from Kata github releases page
+* vmliuz.container: pulled from Kata github releases page
+
+### Daemonsets and RBAC:
+
+A few daemonsets are introduced for kata-deploy, as well as an RBAC to facilitate
+being able to apply labels to the nodes.
+
+#### runtime-labeler:
+
+This daemonset will create a label on each node in
+the cluster identifying the CRI shim in use. For example,
+`container-runtime=crio` or `container-runtime=containerd.`
+
+#### CRI-O and containerd kata installer:
+
+Depending the value of `container-runtime` label on the node, either the CRI-O or
+containerd kata installation daemonset will execute. These daemonsets will install
+the necessary kata binaries, configuration files and virtual machine artifacts on
+the node. Once installed, it will add a node label `kata-runtime=true` and reconfigure
+either CRI-O or containerd to make use of Kata for untrusted workloads.  As a final step it will restart either CRI-O or containerd and kubelet. Upon deletion, the daemonset will remove the kata binaries and VM artifacts and update the node label
+to `kata-runtime=cleanup.`
+
+### CRI-O and containerd cleanup:
+Depending on the value of `container-runtime`, either the CRI-O or conatinerd Kata cleanup daemonset will run if the node has label `kata-runtime=cleanup.` This daemonsets will remove the `container-runtime` and `kata-runtime` labels as well
+as restart either CRI-O or containerd systemctl daemon as well as kubelet. These resets cannot be executed during the preStopHook of the Kata installer daemonset,
+which necessitated this final cleanup daemonset.
