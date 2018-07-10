@@ -2,6 +2,7 @@
 
 echo "copying kata artifacts onto host"
 cp -R /opt/kata-artifacts/bin /opt/kata/
+mkdir /opt/kata/share
 mv /opt/kata/bin/qemu /opt/kata/share/
 chmod +x /opt/kata/bin/*
 cp /opt/kata-artifacts/configuration.toml /usr/share/defaults/kata-containers/configuration.toml
@@ -9,6 +10,7 @@ cp /opt/kata-artifacts/configuration.toml /usr/share/defaults/kata-containers/co
 # Update Kata configuration for /opt/kata path usage
 sed -i 's!/usr.*kata-containers/!/opt/kata/bin/!' /usr/share/defaults/kata-containers/configuration.toml
 sed -i 's!/usr/bin/!/opt/kata/bin/!' /usr/share/defaults/kata-containers/configuration.toml
+sed -i 's!qemu-lite!qemu!' /usr/share/defaults/kata-containers/configuration.toml
 
 # Configure containerd to use Kata:
 echo "create containerd configuration for Kata"
