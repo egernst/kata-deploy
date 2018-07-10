@@ -13,4 +13,4 @@ RUN \
 curl -s -o /bin/kubectl https://storage.googleapis.com/kubernetes-release/release/${KUBECTL_VER}/bin/linux/amd64/kubectl && \
 chmod +x /bin/kubectl
 
-COPY scripts /tmp/kata/scripts
+COPY scripts /opt/kata-artifacts/scripts

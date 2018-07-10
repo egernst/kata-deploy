@@ -1,6 +1,6 @@
 #!/bin/sh
-echo "copying kata artifacts from /tmp to /opt"
-cp -R /opt/kata-artifacts/bin/* /opt/kata/bin
+echo "copying kata artifacts onto host"
+cp -R /opt/kata-artifacts/bin/* /opt/kata/bin/
 mv /opt/kata/bin/qemu /opt/kata/share/
 chmod +x /opt/kata/bin/*
 cp /opt/kata-artifacts/configuration.toml /usr/share/defaults/kata-containers/configuration.toml
