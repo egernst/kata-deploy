@@ -22,10 +22,9 @@ spec:
         args:
         - printenv NODE_NAME;
           kubectl get node $NODE_NAME --show-labels;
-          kubectl label node $NODE_NAME container-runtime=$(kubectl describe node $NODE_NAME | awk -F'[:]' '/Container Runtime Version/ {print $2}' |  tr -d ' ');
+          kubectl label node $NODE_NAME kata-containers.io/container-runtime=$(kubectl describe node $NODE_NAME | awk -F'[:]' '/Container Runtime Version/ {print $2}' |  tr -d ' ');
           kubectl get node $NODE_NAME --show-labels;
-          while true;
-          do sleep 36000; done;
+          sleep infinity;
         env:
         - name: NODE_NAME
           valueFrom:
@@ -54,7 +53,7 @@ spec:
     spec:
       serviceAccountName: kata-label-node
       nodeSelector:
-          container-runtime: cri-o
+          kata-containers.io/container-runtime: cri-o
       containers:
       - name: kube-kata
         image: egernst/kata-deploy
@@ -62,13 +61,12 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["sh", "-c", "/tmp/kata/scripts/remove-kata-crio.sh && kubectl label node $NODE_NAME --overwrite kata-runtime=cleanup"]
-        command: [ "sh", "-c" ]
+              command: ["sh", "-c", "/tmp/kata/scripts/remove-kata-crio.sh && kubectl label node $NODE_NAME --overwrite kata-containers.io/kata-runtime=cleanup"]
+        command: [ "sh", "-ce" ]
         args:
-        - /tmp/kata/scripts/install-kata-crio.sh && kubectl label node $NODE_NAME kata-runtime=true;
+        - /tmp/kata/scripts/install-kata-crio.sh && kubectl label node $NODE_NAME kata-containers.io/kata-runtime=true;
           kubectl get node $NODE_NAME --show-labels;
-          while true;
-          do sleep 36000; done;
+          sleep infinity;
         env:
         - name: NODE_NAME
           valueFrom:
@@ -126,7 +124,7 @@ spec:
     spec:
       serviceAccountName: kata-label-node
       nodeSelector:
-          container-runtime: containerd
+          kata-containers.io/container-runtime: containerd
       containers:
       - name: kube-kata
         image: egernst/kata-deploy
@@ -134,13 +132,12 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["sh", "-c", "/tmp/kata/scripts/remove-kata-containerd.sh && kubectl label node $NODE_NAME --overwrite kata-runtime=cleanup"]
+              command: ["sh", "-c", "/tmp/kata/scripts/remove-kata-containerd.sh && kubectl label node $NODE_NAME --overwrite kata-containers.io/kata-runtime=cleanup"]
         command: [ "sh", "-c" ]
         args:
-        - /tmp/kata/scripts/install-kata-containerd.sh && kubectl label node $NODE_NAME kata-runtime=true;
+        - /tmp/kata/scripts/install-kata-containerd.sh && kubectl label node $NODE_NAME kata-containers.io/kata-runtime=true;
           kubectl get node $NODE_NAME --show-labels;
-          while true;
-          do sleep 36000; done;
+          sleep infinity;
         env:
         - name: NODE_NAME
           valueFrom:
