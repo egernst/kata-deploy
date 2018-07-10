@@ -1,6 +1,7 @@
 FROM centos/systemd
 ARG KATA_VER=1.1.0
 ARG KATA_URL=https://github.com/kata-containers/runtime/releases/download/${KATA_VER}
+ARG KUBECTL_VER=v1.10.2
 
 RUN \
 curl -sOL ${KATA_URL}/kata-release-binaries.tar.xz && \
