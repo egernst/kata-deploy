@@ -1,3 +1,5 @@
+** This has been pulled into github.com/kata-containers/packaging repository **
+
 # kata-deploy
 
 
