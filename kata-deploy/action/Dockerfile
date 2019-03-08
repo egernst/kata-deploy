@@ -15,8 +15,8 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${K8S_VER
   && mv ./kubectl /usr/local/bin/kubectl
 
 RUN curl -LO https://github.com/Azure/aks-engine/releases/download/${AKS_ENGINE_VER}/aks-engine-${AKS_ENGINE_VER}-linux-amd64.tar.gz \
-  && tar xvf aks-engine-${AKS_ENGINE_VER}-linux-amd64.tar.gz
-  && mv aks-engine-${AKS_ENGINE_VER}-linux-amd64/aks-engine /usr/local/bin/aks-engine
+  && tar xvf aks-engine-${AKS_ENGINE_VER}-linux-amd64.tar.gz \
+  && mv aks-engine-${AKS_ENGINE_VER}-linux-amd64/aks-engine /usr/local/bin/aks-engine \
   && rm aks-engine-${AKS_ENGINE_VER}-linux-amd64.tar.gz
 
 COPY kubernetes-containerd.json /
