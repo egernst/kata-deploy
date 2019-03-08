@@ -20,7 +20,7 @@ die() {
 
 # Give it a try
 LOCATION=${LOCATION:-westus2}
-DNS_PREFIX=${DNS_PREFIX:-kata-deploy-$GITHUB_SHA}
+DNS_PREFIX=${DNS_PREFIX:-kata-deploy-${GITHUB_SHA:0:10}}
 CLUSTER_CONFIG=${CLUSTER_CONFIG:-/kubernetes-containerd.json}
 
 aks-engine deploy --subscription-id $AZ_SUBSCRIPTION_ID \
