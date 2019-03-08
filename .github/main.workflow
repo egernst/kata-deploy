@@ -29,7 +29,7 @@ action "docker-push-sha" {
 action "aks-test" {
   needs = "docker-push-sha"
   uses = "./kata-deploy/action"
-  secrets = ["AZ_APPID", "AZ_PASSWORD", "AZ_SUBSCRIPTION_ID"]
+  secrets = ["AZ_APPID", "AZ_PASSWORD", "AZ_SUBSCRIPTION_ID", "AZ_TENANT_ID"]
 }
 
 action "docker-tag-ref" {
