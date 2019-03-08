@@ -7,7 +7,7 @@ set -o nounset
 export AZURE_HTTP_USER_AGENT="GITHUBACTIONS_${GITHUB_ACTION_NAME}_${GITHUB_REPOSITORY}"
 
 die() {
-	echo $1
+	echo $1 >&2
 	exit
 }
 
