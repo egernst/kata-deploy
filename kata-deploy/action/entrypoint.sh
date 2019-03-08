@@ -35,6 +35,29 @@ export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
 #kubectl all the things
 kubectl get pods --all-namespaces
 
+YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy/"
+kubectl apply -f "$YAMLPATH/examples/kata-rbac.yaml"
+kubectl apply -f "$YAMLPATH/examples/kata-runtimeClass.yaml"
+
+sleep 5
+
+kubectl get runtimeclasses
+
+wget  "$YAMLPATH/kata-deploy.yaml"
+wget  "$YAMLPATH/kata-cleanup.yaml"
+
+# update deployment daemonset to utilize the container under test:
+sed -i 's:katadocker/kata-deploy:katadocker/kata-deploy-ci:${GITHUB_SHA}:' kata-deploy.yaml
+sed -i 's:katadocker/kata-deploy:katadocker/kata-deploy-ci:${GITHUB_SHA}:' kata-cleanup.yaml
+
+# deploy kata:
+kubectl apply -f kata-deploy.yaml
+
+## TODO: exercise the runtime
+
+# remove kata (yeah, we are about to destroy, but good to test this flow as well):
+kubectl apply -f kata-cleanup.yaml
+
 #cleanup
 az login --service-principal -u $AZ_APPID -p $AZ_PASSWORD --tenant $AZ_TENANT_ID
 az group delete --name $DNS_PREFIX --yes
