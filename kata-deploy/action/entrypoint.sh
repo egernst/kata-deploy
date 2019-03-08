@@ -21,14 +21,13 @@ die() {
 # Give it a try
 LOCATION=${LOCATION:-westus2}
 DNS_PREFIX=${DNS_PREFIX:-kata-deploy-$GITHUB_REF-$GITHUB_SHA}
+CLUSTER_CONFIG=${CLUSTER_CONFIG:-kubernetes-containerd.json}
 
 aks-engine deploy --subscription-id $AZ_SUBSCRIPTION_ID \
 	--client-id $AZ_APPID --client-secret $AZ_PASSWORD \
 	--location $LOCATION --dns-prefix $DNS_PREFIX \
 	--api-model $CLUSTER_CONFIG --force-overwrite
 
-if [ -z "$KUBECONFIG" ]; then
-	export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
-fi
+export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
 
 #kubectl all the things

@@ -12,6 +12,7 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${K8S_VER
   && chmod +x ./kubectl \
   && mv ./kubectl /usr/local/bin/kubectl
 
+COPY kubernetes-containerd.json /
 COPY entrypoint.sh /
 
 ENTRYPOINT ["/entrypoint.sh"]
