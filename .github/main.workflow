@@ -11,7 +11,7 @@ action "tag-filter" {
 action "docker-build" {
   needs = "tag-filter"
   uses = "actions/docker/cli@master"
-  args = "build --build-arg KATA_VER=$GITHUB_REF -t katadocker/kata-deploy ./kata-deploy"
+  args = "build --build-arg KATA_VER=${GITHUB_REF##*/} -t katadocker/kata-deploy ./kata-deploy"
 }
 
 action "docker-tag" {
@@ -41,5 +41,5 @@ action "aks-test" {
 action "docker-push-ref" {
   needs = "aks-test"
   uses = "actions/docker/cli@master"
-  args = "push katadocker/kata-deploy:$GITHUB_REF"
+  args = "push katadocker/kata-deploy:${GITHUB_REF##*/}"
 }
