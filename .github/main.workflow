@@ -23,7 +23,7 @@ action "docker-login" {
 action "docker-push-sha" {
   needs = "docker-login"
   uses = "actions/docker/cli@master"
-  args = "push katadocker/kata-deploy:$GITHUB_SHA"
+  args = "push katadocker/kata-deploy-ci:$GITHUB_SHA"
 }
 
 action "aks-test" {
@@ -35,7 +35,7 @@ action "aks-test" {
 action "docker-tag-ref" {
   needs = "aks-test"
   uses = "actions/docker/cli@master"
-  args = "tag katadocker/kata-deploy:$GITHUB_SHA katadocker/kata-deploy-ci:$GITHUB_SHA"
+  args = "tag katadocker/kata-deploy-ci:$GITHUB_SHA katadocker/kata-deploy:${GITHUB_REF##*/}"
 }
 
 action "docker-push-ref" {
