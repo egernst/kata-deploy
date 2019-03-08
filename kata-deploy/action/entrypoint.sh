@@ -1,6 +1,9 @@
 #!/bin/bash
 
-set -e
+set -o errexit
+set -o pipefail
+set -o nounset
+
 export AZURE_HTTP_USER_AGENT="GITHUBACTIONS_${GITHUB_ACTION_NAME}_${GITHUB_REPOSITORY}"
 
 die() {
@@ -9,8 +12,8 @@ die() {
 }
 
 [[ -z "$AZ_APPID" ]] && die "no Azure service principal ID provided"
-[[ -z "$AZ_PASS" ]] && die "no Azure service principal secret provided"
-[[ -z "$SUBSCRIPTION_ID" ]] && die "no Azure subscription ID provided"
+[[ -z "$AZ_PASSWORD" ]] && die "no Azure service principal secret provided"
+[[ -z "$AZ_SUBSCRIPTION_ID" ]] && die "no Azure subscription ID provided"
 
 # check cluster config existence
 # TODO
@@ -19,8 +22,8 @@ die() {
 LOCATION=${LOCATION:-westus2}
 DNS_PREFIX=${DNS_PREFIX:-kata-deploy-$GITHUB_REF-$GITHUB_SHA}
 
-aks-engine deploy --subscription-id $SUBSCRIPTION_ID \
-	--client-id $AKS_APPID --client-secret $AKS_PW \
+aks-engine deploy --subscription-id $AZ_SUBSCRIPTION_ID \
+	--client-id $AZ_APPID --client-secret $AZ_PASSWORD \
 	--location $LOCATION --dns-prefix $DNS_PREFIX \
 	--api-model $CLUSTER_CONFIG --force-overwrite
 
