@@ -48,8 +48,8 @@ wget  "$YAMLPATH/kata-deploy.yaml"
 wget  "$YAMLPATH/kata-cleanup.yaml"
 
 # update deployment daemonset to utilize the container under test:
-sed -i 's:katadocker/kata-deploy:katadocker/kata-deploy-ci:${GITHUB_SHA}:' kata-deploy.yaml
-sed -i 's:katadocker/kata-deploy:katadocker/kata-deploy-ci:${GITHUB_SHA}:' kata-cleanup.yaml
+sed -i 's#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g' kata-deploy.yaml
+sed -i 's#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g' kata-cleanup.yaml
 
 # deploy kata:
 kubectl apply -f kata-deploy.yaml
