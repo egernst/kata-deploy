@@ -35,8 +35,9 @@ export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
 #kubectl all the things
 kubectl get pods --all-namespaces
 
-YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy/"
-kubectl apply -f "$YAMLPATH/examples/kata-rbac.yaml"
+YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
+kubectl apply -f "$YAMLPATH/kata-rbac.yaml"
+kubectl apply -f "$YAMLPATH/examples/runtimeclass_crd.yaml"
 kubectl apply -f "$YAMLPATH/examples/kata-runtimeClass.yaml"
 
 sleep 5
