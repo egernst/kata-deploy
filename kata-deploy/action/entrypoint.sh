@@ -14,6 +14,7 @@ die() {
 [[ -z "$AZ_APPID" ]] && die "no Azure service principal ID provided"
 [[ -z "$AZ_PASSWORD" ]] && die "no Azure service principal secret provided"
 [[ -z "$AZ_SUBSCRIPTION_ID" ]] && die "no Azure subscription ID provided"
+[[ -z "$AZ_TENANT_ID" ]] && die "no Azure tenant ID provided"
 
 # check cluster config existence
 # TODO
@@ -34,4 +35,6 @@ export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
 kubectl get pods --all-namespaces
 
 #cleanup
+az login --service-principal -u $AZ_APPID -p $AZ_PASSWORD --tenant $AZ_TENANT_ID
 az group delete --name $DNS_PREFIX --yes
+az logout
