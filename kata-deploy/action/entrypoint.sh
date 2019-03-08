@@ -31,3 +31,7 @@ aks-engine deploy --subscription-id $AZ_SUBSCRIPTION_ID \
 export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
 
 #kubectl all the things
+kubectl get pods --all-namespaces
+
+#cleanup
+az group delete --name $DNS_PREFIX --yes
