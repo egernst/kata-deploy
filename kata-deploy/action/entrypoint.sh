@@ -7,8 +7,9 @@ set -o nounset
 export AZURE_HTTP_USER_AGENT="GITHUBACTIONS_${GITHUB_ACTION_NAME}_${GITHUB_REPOSITORY}"
 
 die() {
-	echo $1 >&2
-	exit
+        msg="$*"
+        echo "ERROR: $msg" >&2
+        exit 1
 }
 
 [[ -z "$AZ_APPID" ]] && die "no Azure service principal ID provided"
