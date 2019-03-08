@@ -11,17 +11,11 @@ action "tag-filter" {
 action "docker-build" {
   needs = "tag-filter"
   uses = "actions/docker/cli@master"
-  args = "build --build-arg KATA_VER=${GITHUB_REF##*/} -t katadocker/kata-deploy ./kata-deploy"
-}
-
-action "docker-tag" {
-  needs = "docker-build"
-  uses = "actions/docker/tag@master"
-  args = "kata-deploy katadocker/kata-deploy"
+  args = "build --build-arg KATA_VER=${GITHUB_REF##*/} -t katadocker/kata-deploy:$GITHUB_SHA ./kata-deploy"
 }
 
 action "docker-login" {
-  needs = "docker-tag"
+  needs = "docker-build"
   uses = "actions/docker/login@master"
   secrets = ["DOCKER_USERNAME", "DOCKER_PASSWORD"]
 }
@@ -38,8 +32,14 @@ action "aks-test" {
   secrets = ["AZ_APPID", "AZ_PASSWORD", "AZ_SUBSCRIPTION_ID"]
 }
 
-action "docker-push-ref" {
+action "docker-tag-ref" {
   needs = "aks-test"
+  uses = "actions/docker/cli@master"
+  args = "tag katadocker/kata-deploy:$GITHUB_SHA katadocker/kata-deploy:$GITHUB_SHA"
+}
+
+action "docker-push-ref" {
+  needs = "docker-tag-ref"
   uses = "actions/docker/cli@master"
   args = "push katadocker/kata-deploy:${GITHUB_REF##*/}"
 }
