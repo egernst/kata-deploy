@@ -56,6 +56,10 @@ kubectl apply -f kata-deploy.yaml
 
 ## TODO: exercise the runtime
 
+#wait for kata-deploy to be up
+
+#start a kata pod and test connectivity
+
 # remove kata (yeah, we are about to destroy, but good to test this flow as well):
 kubectl apply -f kata-cleanup.yaml
 
