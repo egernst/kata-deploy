@@ -61,7 +61,10 @@ kubectl apply -f kata-deploy.yaml
 #start a kata pod and test connectivity
 
 # remove kata (yeah, we are about to destroy, but good to test this flow as well):
+kubectl delete -f kata-deploy.yaml
 kubectl apply -f kata-cleanup.yaml
+kubectl delete -f kata-cleanup.yaml
+kubectl delete -f kata-rbac.yaml
 
 #cleanup
 az login --service-principal -u $AZ_APPID -p $AZ_PASSWORD --tenant $AZ_TENANT_ID
