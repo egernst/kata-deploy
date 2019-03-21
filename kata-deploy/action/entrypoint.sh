@@ -11,7 +11,15 @@ LOCATION=${LOCATION:-westus2}
 DNS_PREFIX=${DNS_PREFIX:-kata-deploy-${GITHUB_SHA:0:10}}
 CLUSTER_CONFIG=${CLUSTER_CONFIG:-/kubernetes-containerd.json}
 
-test-kata() {
+function cleanup() {
+#cleanup
+az login --service-principal -u $AZ_APPID -p $AZ_PASSWORD --tenant $AZ_TENANT_ID
+az group delete --name $DNS_PREFIX --yes --no-wait
+az logout
+}
+trap cleanup EXIT
+
+function test-kata() {
         echo "verify connectivity with a pod using Kata"
 
         deployment="nginx-deployment"
@@ -83,14 +91,15 @@ sed -i 's#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g' kata
 kubectl apply -f kata-deploy.yaml
 
 #wait for kata-deploy to be up
-kubectl  wait --for=condition=Available daemonset/kata-deploy
+kubectl  -n kube-system wait --for=condition=Available daemonset/kata-deploy
+
+#Do I see this?
+kubectl get pods --all-namespaces
 
 test-kata
 
 # remove kata (yeah, we are about to destroy, but good to test this flow as well):
+kubectl delete -f kata-deploy.yaml
 kubectl apply -f kata-cleanup.yaml
-
-#cleanup
-az login --service-principal -u $AZ_APPID -p $AZ_PASSWORD --tenant $AZ_TENANT_ID
-az group delete --name $DNS_PREFIX --yes --no-wait
-az logout
+kubectl  -n kube-system wait --for=condition=Available daemonset/kata-cleanup
+kubectl delete  -f kata-cleanup.yaml
