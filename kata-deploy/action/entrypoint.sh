@@ -10,8 +10,8 @@ die() {
         exit 1
 }
 
-source setup-aks.sh
-source test-kata.sh
+source /setup-aks.sh
+source /test-kata.sh
 
 trap destroy_aks EXIT
 
