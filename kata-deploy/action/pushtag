@@ -1,0 +1,1 @@
+git tag -a 1.5.0 -s -m "test tag - 1.5.0" && git push origin 1.5.0
