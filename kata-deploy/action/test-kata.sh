@@ -38,7 +38,7 @@ function run_test() {
 
 	# test pod connectivity:
 	kubectl run $busybox_pod --restart=Never --image="$busybox_image" -- wget --timeout=5 "$deployment"
-	waitForProcess $wait_time" "$sleep_time" "$cmd"
+	waitForProcess "$wait_time" "$sleep_time" "$cmd"
 	kubectl logs "$busybox_pod" | grep "index.html"
 	kubectl describe pod "$busybox_pod"
 
@@ -63,7 +63,7 @@ function test_kata() {
 	wget "$YAMLPATH/kata-cleanup.yaml"
 
 	# update deployment daemonset to utilize the container under test:
-	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g" kata-deploy.yaml
+	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g"  kata-deploy.yaml
 	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g" kata-cleanup.yaml
 
 	# deploy kata:
