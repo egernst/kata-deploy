@@ -69,8 +69,12 @@ function test_kata() {
 	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g" kata-deploy.yaml
 	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g" kata-cleanup.yaml
 
+	cat kata-deploy.yaml
+
 	# deploy kata:
 	kubectl apply -f kata-deploy.yaml
+
+	sleep 1
 
 	#wait for kata-deploy to be up
 	kubectl -n kube-system wait --timeout=5m --for=condition=Ready -l name=kata-deploy pod
