@@ -71,6 +71,8 @@ function test_kata() {
 
 	cat kata-deploy.yaml
 
+	sleep 100
+
 	# deploy kata:
 	kubectl apply -f kata-deploy.yaml
 
