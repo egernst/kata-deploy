@@ -33,7 +33,7 @@ function run_test() {
 
 	# start the kata pod:
 	kubectl apply -f "$YAMLPATH/examples/${deployment}.yaml"
-	kubectl wait --for=condition=Available deployment/${deployment}
+	kubectl wait --timeout=5m --for=condition=Available deployment/${deployment}
 	kubectl expose deployment/${deployment}
 
 	# test pod connectivity:
