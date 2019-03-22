@@ -5,12 +5,11 @@ LABEL maintainer="eric and sai"
 LABEL com.github.actions.name="Test kata-deploy in an AKS cluster"
 LABEL com.github.actions.description="Wow.  Where do i start.  Create an AKS cluster with containerd+runtimeclass, then deploys kata onto it and even might start a workload. nbd"
 
-ARG AKS_ENGINE_VER="v0.32.0"
+ARG AKS_ENGINE_VER="v0.32.3"
 
 ENV GITHUB_ACTION_NAME="Test kata-deploy in an AKS cluster"
-ARG K8S_VER="v1.12.0"
 
-RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/${K8S_VER}/bin/linux/amd64/kubectl \
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl \
   && chmod +x ./kubectl \
   && mv ./kubectl /usr/local/bin/kubectl
 
