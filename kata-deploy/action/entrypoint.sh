@@ -10,8 +10,10 @@ die() {
 	exit 1
 }
 
-source ./setup-aks.sh
-source ./test-kata.sh
+# Since this is the entrypoint for the container image, we know that the AKS and Kata setup/testing
+# scripts are located at root.
+source /setup-aks.sh
+source /test-kata.sh
 
 trap destroy_aks EXIT
 
