@@ -5,9 +5,9 @@ set -o pipefail
 set -o nounset
 
 die() {
-        msg="$*"
-        echo "ERROR: $msg" >&2
-        exit 1
+	msg="$*"
+	echo "ERROR: $msg" >&2
+	exit 1
 }
 
 source /setup-aks.sh
