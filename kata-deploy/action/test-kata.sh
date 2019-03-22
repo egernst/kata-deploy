@@ -6,6 +6,21 @@ set -o nounset
 
 YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 
+function waitForProcess() {
+        wait_time="$1"
+        sleep_time="$2"
+        cmd="$3"
+        while [ "$wait_time" -gt 0 ]; do
+                if eval "$cmd"; then
+                        return 0
+                else
+                        sleep "$sleep_time"
+                        wait_time=$((wait_time-sleep_time))
+                fi
+        done
+        return 1
+}
+
 function run_test() {
 	echo "verify connectivity with a pod using Kata"
 
@@ -22,9 +37,8 @@ function run_test() {
 	kubectl expose deployment/${deployment}
 
 	# test pod connectivity:
-	kubectl run $busybox_pod --restart=Never --image="$busybox_image" \
-		-- wget --timeout=5 "$deployment"
-	waitForProcess "$wait_time" "$sleep_time" "$cmd"
+	kubectl run $busybox_pod --restart=Never --image="$busybox_image" -- wget --timeout=5 "$deployment"
+	waitForProcess $wait_time" "$sleep_time" "$cmd"
 	kubectl logs "$busybox_pod" | grep "index.html"
 	kubectl describe pod "$busybox_pod"
 
