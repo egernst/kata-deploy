@@ -48,6 +48,7 @@ function run_test() {
 }
 
 function test_kata() {
+	set -x
 	#kubectl all the things
 	kubectl get pods --all-namespaces
 
@@ -89,4 +90,5 @@ function test_kata() {
 	kubectl get node --show-labels
 
 	kubectl delete -f kata-cleanup.yaml
+	set +x
 }

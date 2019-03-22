@@ -17,6 +17,7 @@ function die() {
 }
 
 function destroy_aks() {
+    set +x
 	az login --service-principal -u "$AZ_APPID" -p "$AZ_PASSWORD" --tenant "$AZ_TENANT_ID"
 	az group delete --name "$DNS_PREFIX" --yes --no-wait
 	az logout
