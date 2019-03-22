@@ -4,7 +4,6 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 
 function waitForProcess() {
         wait_time="$1"
@@ -22,13 +21,14 @@ function waitForProcess() {
 }
 
 function run_test() {
+	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 	echo "verify connectivity with a pod using Kata"
 
 	deployment="nginx-deployment"
 	busybox_pod="test-nginx"
 	busybox_image="busybox"
 	cmd="kubectl get pods -a | grep $busybox_pod | grep Completed"
-	wait_time=30
+	wait_time=120
 	sleep_time=3
 
 	# start the kata pod:
@@ -51,6 +51,8 @@ function test_kata() {
 	#kubectl all the things
 	kubectl get pods --all-namespaces
 
+	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
+	
 	kubectl apply -f "$YAMLPATH/kata-rbac.yaml"
 	kubectl apply -f "$YAMLPATH/examples/runtimeclass_crd.yaml"
 	kubectl apply -f "$YAMLPATH/examples/kata-runtimeClass.yaml"
@@ -63,7 +65,7 @@ function test_kata() {
 	wget "$YAMLPATH/kata-cleanup.yaml"
 
 	# update deployment daemonset to utilize the container under test:
-	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g"  kata-deploy.yaml
+	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g" kata-deploy.yaml
 	sed -i "s#katadocker/kata-deploy#katadocker/kata-deploy-ci:${GITHUB_SHA}#g" kata-cleanup.yaml
 
 	# deploy kata:
