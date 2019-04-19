@@ -1,3 +1,4 @@
-git tag --delete 1.6.0
-git push origin :1.6.0
-git tag -a 1.6.0 -m "test tag - 1.6.0" && git push origin 1.6.0
+VERSION=1.7.0-alpha1
+git tag --delete $VERSION
+git push origin :$VERSION
+git tag -a $VERSION -m "test tag - $VERSION" && git push origin $VERSION
