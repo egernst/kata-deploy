@@ -180,7 +180,6 @@ function reset_runtime() {
 	kubectl label node $NODE_NAME katacontainers.io/kata-runtime-
 	systemctl daemon-reload
 	systemctl restart $1
-	systemctl restart kubelet
 }
 
 function main() {
