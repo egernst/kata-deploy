@@ -15,7 +15,7 @@
       - [Kata deploy](#kata-deploy)
       - [Kata cleanup](#kata-cleanup)
 
-[kata-deploy](kata-deploy) provides a Dockerfile, which contains all of the binaries
+[kata-deploy](.) provides a Dockerfile, which contains all of the binaries
 and artifacts required to run Kata Containers, as well as reference daemonsets, which can
 be utilized to install Kata Containers for both Docker and on a running Kubernetes cluster.
 
@@ -80,6 +80,29 @@ Workloads which utilize Kata can node-select based on ```katacontainers.io/kata-
 run through an applicable runtime if they are marked with the appropriate runtimeClass annotation.
 
 
+In order to use a workload Kata with QEMU, first add a `RuntimeClass` as:
+- For k8s 1.14:
+  ```
+  kubectl apply -f https://raw.githubusercontent.com/kata-containers/packaging/master/kata-deploy/k8s-1.14/kata-qemu-runtimeClass.yaml
+  ```
+
+- For k8s 1.13:
+  ```
+  kubectl apply -f https://raw.githubusercontent.com/kata-containers/packaging/master/kata-deploy/k8s-1.13/kata-qemu-runtimeClass.yaml
+  ```
+
+
+In order to use a workload Kata with Firecracker, first add a `RuntimeClass` as:
+- For k8s 1.14:
+  ```
+  kubectl apply -f https://raw.githubusercontent.com/kata-containers/packaging/master/kata-deploy/k8s-1.14/kata-fc-runtimeClass.yaml
+  ```
+
+- For k8s 1.13:
+  ```
+  kubectl apply -f https://raw.githubusercontent.com/kata-containers/packaging/master/kata-deploy/k8s-1.13/kata-fc-runtimeClass.yaml
+  ```
+
 The following YAML snippet shows how to specify a workload should use Kata with QEMU:
 ```
 spec:
@@ -95,7 +118,6 @@ spec:
     spec:
       runtimeClassName: kata-fc
 ```
-
 
 To run an example with kata-qemu:
 
@@ -128,7 +150,7 @@ kubectl delete -f kata-rbac.yaml
 
 ### Dockerfile
 
-The [Dockerfile](kata-deploy/Dockerfile)  used to create the container image deployed in the DaemonSet is provided here.
+The [Dockerfile](Dockerfile)  used to create the container image deployed in the DaemonSet is provided here.
 This image contains all the necessary artifacts for running Kata Containers, all of which are pulled
 from the [Kata Containers release page](https://github.com/kata-containers/runtime/releases).
 
