@@ -2,6 +2,13 @@
 kind: RuntimeClass
 apiVersion: node.k8s.io/v1alpha1
 metadata:
-    name: kata
+    name: kata-qemu
 spec:
-    runtimeHandler: kata
+    runtimeHandler: kata-qemu
+---
+kind: RuntimeClass
+apiVersion: node.k8s.io/v1alpha1
+metadata:
+    name: kata-nemu
+spec:
+    runtimeHandler: kata-nemu
