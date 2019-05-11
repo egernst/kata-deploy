@@ -68,7 +68,7 @@ function configure_crio() {
 	local kata_nemu_path="/opt/kata/bin/kata-nemu"
 	local kata_fc_path="/opt/kata/bin/kata-fc"
 	local kata_qemu_conf="crio.runtime.runtimes.kata-qemu"
-	local kata_qemu_conf="crio.runtime.runtimes.kata-nemu"
+	local kata_nemu_conf="crio.runtime.runtimes.kata-nemu"
 	local kata_fc_conf="crio.runtime.runtimes.kata-fc"
 
 	# add kata-qemu config
