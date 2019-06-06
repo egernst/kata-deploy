@@ -23,22 +23,17 @@ function waitForProcess() {
 
 
 function run_test() {
-	deployments={
-	  "nginx-deployment-qemu"
-	  "nginx-deployment-nemu"
-	}
-
 	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 	echo "verify connectivity with a pod using Kata"
 
 	deployment=""
 	busybox_pod="test-nginx"
 	busybox_image="busybox"
-	cmd="kubectl get pods -a | grep $busybox_pod | grep Completed"
+	cmd="kubectl get pods | grep $busybox_pod | grep Completed"
 	wait_time=120
 	sleep_time=3
 
-	for deployment in ${deployments[@]}; do
+	for deployment in "nginx-deployment-qemu" "nginx-deployment-nemu"; do
 	  # start the kata pod:
 	  kubectl apply -f "$YAMLPATH/examples/${deployment}.yaml"
 	  kubectl wait --timeout=5m --for=condition=Available deployment/${deployment}
@@ -57,6 +52,7 @@ function run_test() {
 	done
 }
 
+
 function test_kata() {
 	set -x
 	#kubectl all the things
@@ -67,6 +63,7 @@ function test_kata() {
 	kubectl apply -f "$YAMLPATH/kata-rbac.yaml"
 	kubectl apply -f "$YAMLPATH/k8s-1.14/kata-nemu-runtimeClass.yaml"
 	kubectl apply -f "$YAMLPATH/k8s-1.14/kata-qemu-runtimeClass.yaml"
+	kubectl apply -f "$YAMLPATH/k8s-1.14/kata-fc-runtimeClass.yaml"
 
 	sleep 5
 
@@ -110,5 +107,9 @@ function test_kata() {
 	kubectl get node --show-labels
 
 	kubectl delete -f kata-cleanup.yaml
+
+	rm kata-cleanup.yaml
+	rm kata-deploy.yaml
+
 	set +x
 }
