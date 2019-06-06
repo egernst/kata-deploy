@@ -20,31 +20,39 @@ function waitForProcess() {
         return 1
 }
 
+deployments={
+	"nginx-deployment-qemu"
+	"nginx-deployment-nemu"
+}
+
 function run_test() {
 	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 	echo "verify connectivity with a pod using Kata"
 
-	deployment="nginx-deployment"
+	deployment=""
 	busybox_pod="test-nginx"
 	busybox_image="busybox"
 	cmd="kubectl get pods -a | grep $busybox_pod | grep Completed"
 	wait_time=120
 	sleep_time=3
 
-	# start the kata pod:
-	kubectl apply -f "$YAMLPATH/examples/${deployment}.yaml"
-	kubectl wait --timeout=5m --for=condition=Available deployment/${deployment}
-	kubectl expose deployment/${deployment}
+	for deployment in ${deployments[@]}; do
+	  # start the kata pod:
+	  kubectl apply -f "$YAMLPATH/examples/${deployment}.yaml"
+	  kubectl wait --timeout=5m --for=condition=Available deployment/${deployment}
+	  kubectl wait --timeout=5m --for=condition=Available deployment/${deployment}
+	  kubectl expose deployment/${deployment}
 
-	# test pod connectivity:
-	kubectl run $busybox_pod --restart=Never --image="$busybox_image" -- wget --timeout=5 "$deployment"
-	waitForProcess "$wait_time" "$sleep_time" "$cmd"
-	kubectl logs "$busybox_pod" | grep "index.html"
-	kubectl describe pod "$busybox_pod"
+	  # test pod connectivity:
+	  kubectl run $busybox_pod --restart=Never --image="$busybox_image" -- wget --timeout=5 "$deployment"
+	  waitForProcess "$wait_time" "$sleep_time" "$cmd"
+	  kubectl logs "$busybox_pod" | grep "index.html"
+	  kubectl describe pod "$busybox_pod"
 
-	kubectl delete deployment "$deployment"
-	kubectl delete service "$deployment"
-	kubectl delete pod "$busybox_pod"
+	  kubectl delete deployment "$deployment"
+	  kubectl delete service "$deployment"
+	  kubectl delete pod "$busybox_pod"
+	done
 }
 
 function test_kata() {
@@ -84,6 +92,9 @@ function test_kata() {
 	#Do I see this?
 	kubectl get pods --all-namespaces --show-labels
 	kubectl get node --show-labels
+
+	# Enable hugepages (necessary for NEMU test):
+	sysctl -w vm.nr_hugepages=512
 
 	run_test
 
