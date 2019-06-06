@@ -20,12 +20,14 @@ function waitForProcess() {
         return 1
 }
 
-deployments={
-	"nginx-deployment-qemu"
-	"nginx-deployment-nemu"
-}
+
 
 function run_test() {
+	deployments={
+	  "nginx-deployment-qemu"
+	  "nginx-deployment-nemu"
+	}
+
 	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 	echo "verify connectivity with a pod using Kata"
 
