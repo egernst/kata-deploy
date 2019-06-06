@@ -92,9 +92,6 @@ function test_kata() {
 	kubectl get pods --all-namespaces --show-labels
 	kubectl get node --show-labels
 
-	# Enable hugepages (necessary for NEMU test):
-	sysctl -w vm.nr_hugepages=512
-
 	run_test
 
 	# remove kata (yeah, we are about to destroy, but good to test this flow as well):
