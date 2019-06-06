@@ -40,7 +40,7 @@ function setup_aks() {
 		--location "$LOCATION" --dns-prefix "$DNS_PREFIX" \
 		--api-model "$CLUSTER_CONFIG" --force-overwrite
 
-	export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
+	export KUBECONFIG="_output/$DNS_PREFIX/kubeconfig/kubeconfig.$LOCATION.json"
 
 	sleep 60
 
