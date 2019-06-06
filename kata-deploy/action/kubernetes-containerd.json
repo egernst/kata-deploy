@@ -3,7 +3,7 @@
   "properties": {
     "orchestratorProfile": {
       "orchestratorType": "Kubernetes",
-      "orchestratorVersion": "1.13.3",
+      "orchestratorVersion": "1.14.1",
       "kubernetesConfig": {
         "networkPlugin": "flannel",
         "containerRuntime": "containerd",
