@@ -7,13 +7,7 @@
       "kubernetesConfig": {
         "networkPlugin": "flannel",
         "containerRuntime": "containerd",
-        "containerdVersion": "1.2.4",
-        "kubeletConfig" : {
-          "--feature-gates": "RuntimeClass=true"
-        },
-        "apiServerConfig" : {
-          "--feature-gates": "RuntimeClass=true"
-        }
+        "containerdVersion": "1.2.4"
       }
     },
     "masterProfile": {

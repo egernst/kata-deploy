@@ -5,7 +5,7 @@ LABEL maintainer="eric and sai"
 LABEL com.github.actions.name="Test kata-deploy in an AKS cluster"
 LABEL com.github.actions.description="Wow.  Where do i start.  Create an AKS cluster with containerd+runtimeclass, then deploys kata onto it and even might start a workload. nbd"
 
-ARG AKS_ENGINE_VER="v0.32.3"
+ARG AKS_ENGINE_VER="v0.36.4"
 
 ENV GITHUB_ACTION_NAME="Test kata-deploy in an AKS cluster"
 
