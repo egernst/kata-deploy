@@ -41,4 +41,7 @@ function setup_aks() {
 		--api-model "$CLUSTER_CONFIG" --force-overwrite
 
 	export KUBECONFIG="_output/kubeconfig/kubeconfig.$LOCATION.json"
+
+	sleep 60
+
 }
