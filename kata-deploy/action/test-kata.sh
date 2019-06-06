@@ -56,9 +56,6 @@ function run_test() {
 function test_kata() {
 	set -x
 	#kubectl all the things
-
-	sleep 30
-
 	kubectl get pods --all-namespaces
 
 	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
