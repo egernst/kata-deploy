@@ -65,8 +65,8 @@ function test_kata() {
 	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 	
 	kubectl apply -f "$YAMLPATH/kata-rbac.yaml"
-	kubectl apply -f "$YAMLPATH/examples/runtimeclass_crd.yaml"
-	kubectl apply -f "$YAMLPATH/examples/kata-runtimeClass.yaml"
+	kubectl apply -f "$YAMLPATH/k8s-1.14/kata-nemu-runtimeClass.yaml"
+	kubectl apply -f "$YAMLPATH/k8s-1.14/kata-qemu-runtimeClass.yaml"
 
 	sleep 5
 
