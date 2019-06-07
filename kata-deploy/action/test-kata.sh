@@ -33,7 +33,7 @@ function run_test() {
 	wait_time=120
 	sleep_time=3
 
-	for deployment in "nginx-deployment-qemu" "nginx-deployment-nemu"; do
+	for deployment in "nginx-deployment-qemu"; do
 	  # start the kata pod:
 	  kubectl apply -f "$YAMLPATH/examples/${deployment}.yaml"
 	  kubectl wait --timeout=5m --for=condition=Available deployment/${deployment}
