@@ -24,7 +24,7 @@ function run_test() {
 	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
 	echo "verify connectivity with a pod using Kata"
 
-	deployment="nginx-deployment"
+	deployment="nginx-deployment-qemu"
 	busybox_pod="test-nginx"
 	busybox_image="busybox"
 	cmd="kubectl get pods -a | grep $busybox_pod | grep Completed"
@@ -53,10 +53,13 @@ function test_kata() {
 	kubectl get pods --all-namespaces
 
 	YAMLPATH="https://raw.githubusercontent.com/egernst/kata-deploy/$GITHUB_SHA/kata-deploy"
-	
+
+
+
 	kubectl apply -f "$YAMLPATH/kata-rbac.yaml"
-	kubectl apply -f "$YAMLPATH/examples/runtimeclass_crd.yaml"
-	kubectl apply -f "$YAMLPATH/examples/kata-runtimeClass.yaml"
+	kubectl apply -f "$YAMLPATH/k8s-1.13/runtimeclass-crd.yaml"
+	kubectl apply -f "$YAMLPATH/k8s-1.13/kata-qemu-runtimeClass.yaml"
+	kubectl apply -f "$YAMLPATH/k8s-1.13/kata-fc-runtimeClass.yaml"
 
 	sleep 5
 
