@@ -1,4 +1,4 @@
-VERSION=1.6.4
+VERSION=1.6.5
 git tag --delete $VERSION
 git push origin :$VERSION
 git tag -a $VERSION -m "test tag - $VERSION" && git push origin $VERSION
