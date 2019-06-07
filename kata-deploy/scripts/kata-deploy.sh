@@ -114,6 +114,8 @@ function configure_containerd() {
    [plugins.cri.containerd]
      [plugins.cri.containerd.runtimes.kata]
         runtime_type = "io.containerd.kata.v2"
+     [plugins.cri.containerd.runtimes.kata-qemu]
+        runtime_type = "io.containerd.kata.v2"
 EOT
 
 
