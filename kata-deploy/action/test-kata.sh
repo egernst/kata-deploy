@@ -27,7 +27,7 @@ function run_test() {
 	deployment="nginx-deployment-qemu"
 	busybox_pod="test-nginx"
 	busybox_image="busybox"
-	cmd="kubectl get pods -a | grep $busybox_pod | grep Completed"
+	cmd="kubectl get pods | grep $busybox_pod | grep Completed"
 	wait_time=120
 	sleep_time=3
 
