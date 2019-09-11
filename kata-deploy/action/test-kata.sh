@@ -83,7 +83,7 @@ function test_kata() {
 	# deploy kata:
 	kubectl apply -f kata-deploy.yaml
 
-	sleep 1
+	sleep 100
 
 	#wait for kata-deploy to be up
 	kubectl -n kube-system wait --timeout=5m --for=condition=Ready -l name=kata-deploy pod
@@ -98,6 +98,9 @@ function test_kata() {
 	kubectl delete -f kata-deploy.yaml
 	kubectl -n kube-system wait --timeout=5m --for=delete -l name=kata-deploy pod
 	kubectl apply -f kata-cleanup.yaml
+
+	sleep 100
+
 	kubectl -n kube-system wait --timeout=5m --for=condition=Ready -l name=kubelet-kata-cleanup pod
 
 	kubectl get pods --all-namespaces --show-labels
