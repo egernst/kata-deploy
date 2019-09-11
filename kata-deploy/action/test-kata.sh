@@ -94,12 +94,18 @@ function test_kata() {
 
 	run_test
 
+	kubectl get nodes --show-labels
 	# remove kata (yeah, we are about to destroy, but good to test this flow as well):
 	kubectl delete -f kata-deploy.yaml
 	kubectl -n kube-system wait --timeout=5m --for=delete -l name=kata-deploy pod
+
+	kubectl get nodes --show-labels
+
 	kubectl apply -f kata-cleanup.yaml
 
-	sleep 100
+	sleep 200
+
+	kubectl get nodes --show-labels
 
 	kubectl -n kube-system wait --timeout=5m --for=condition=Ready -l name=kubelet-kata-cleanup pod
 
