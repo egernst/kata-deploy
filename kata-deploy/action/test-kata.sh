@@ -103,11 +103,7 @@ function test_kata() {
 
 	kubectl apply -f kata-cleanup.yaml
 
-	sleep 200
-
-	kubectl get nodes --show-labels
-
-	kubectl -n kube-system wait --timeout=5m --for=condition=Ready -l name=kubelet-kata-cleanup pod
+	sleep 20
 
 	kubectl get pods --all-namespaces --show-labels
 	kubectl get node --show-labels
